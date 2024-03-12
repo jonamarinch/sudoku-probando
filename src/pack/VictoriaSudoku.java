@@ -1,37 +1,40 @@
 package pack;
 
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.JLabel;
+import javax.swing.*;
+import java.awt.*;
 
 public class VictoriaSudoku extends JDialog {
 
-	private static final long serialVersionUID = 1L;
-	private final JPanel contentPanel = new JPanel();
+    private static final long serialVersionUID = 1L;
 
-	/**
-	 * Create the dialog.
-	 */
-	public VictoriaSudoku(JFrame propietario, String tituloDifSelecc) {
-		super(propietario, tituloDifSelecc);
-		setBounds(100, 100, 450, 300);
-		contentPanel.setLayout(new BorderLayout());
-		JLabel lblNewLabel = new JLabel("¡Enhorabuena! VICTORIA");
-		contentPanel.add(lblNewLabel, BorderLayout.CENTER);
-		lblNewLabel.setHorizontalAlignment(lblNewLabel.WIDTH/2);
-		getContentPane().add(contentPanel, BorderLayout.CENTER);
-		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+    /**
+     * Create the dialog.
+     */
+    public VictoriaSudoku(JFrame propietario, String tituloDifSelecc) {
+        super(propietario, tituloDifSelecc, true); // Hacer que el diálogo sea modal
+        initComponents();
+        setLocationRelativeTo(propietario); // Centrar el diálogo en relación con su propietario
 		setVisible(true);
-	}
-	@Override
-	public void dispose()
-	{
-		super.dispose();
-	}
+    }
+
+    private void initComponents() {
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        setTitle("¡Enhorabuena! VICTORIA");
+        setSize(450, 150);
+
+        JPanel contentPanel = new JPanel();
+        contentPanel.setLayout(new BorderLayout());
+
+        JLabel lblMessage = new JLabel("¡Enhorabuena! Has ganado.");
+        lblMessage.setHorizontalAlignment(SwingConstants.CENTER);
+        lblMessage.setFont(new Font("Tahoma", Font.BOLD, 20));
+        contentPanel.add(lblMessage, BorderLayout.CENTER);
+
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JButton btnOk = new JButton("OK");
+        btnOk.addActionListener(e -> dispose()); // Cerrar el diálogo al hacer clic en el botón "OK"
+        buttonPanel.add(btnOk);
+        contentPanel.add(buttonPanel, BorderLayout.SOUTH);
+        setContentPane(contentPanel);
+    }
 }

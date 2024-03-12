@@ -1,34 +1,25 @@
 package pack;
 
-import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.Random;
-
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Font;
+import java.awt.*;
+import java.util.Random;
 
 public class VentanaSudoku extends JDialog {
-	
-	private JPanel sudokuPanel;
-	private static final int SCREEN_SIZE = 900;
-	private final int GRID = 9;
-	private Random random;
-	private Dificultad difSelecc;
-	private int[][] numerosSudoku;
-	private JTextField[][] tableroSudoku;
-	private VictoriaSudoku victoria;
-	
+
+    private JPanel sudokuPanel;
+    private static final int SCREEN_SIZE = 900;
+    private final int GRID = 9;
+    private Random random;
+    private Dificultad difSelecc;
+    private int[][] numerosSudoku;
+    private JTextField[][] tableroSudoku;
+    private VictoriaSudoku victoria;
+
 	VentanaSudoku(JFrame propietario, String tituloDifSelecc, Dificultad difSelecc)
 	{
 		super(propietario, tituloDifSelecc);	
@@ -43,9 +34,31 @@ public class VentanaSudoku extends JDialog {
 		this.setContentPane(sudokuPanel);
 		sudokuPanel.setLayout(new GridLayout(GRID, GRID));
 		sudokuPanel.setPreferredSize(new Dimension(SCREEN_SIZE, SCREEN_SIZE));
+
+        pintarTablero();
+        pintarNumeros();
 		
+		this.pack();
+        this.setLocationRelativeTo(null);
+		this.setVisible(true);
+		
+		eliminarNumeros(this.difSelecc);
+	}
+
+    private void pintarNumeros() {
+        for (int i = 0; i < GRID; i++) {
+            for (int j = 0; j < GRID; j++) {
+            	tableroSudoku[i][j].setText(String.valueOf(numerosSudoku[i][j]));
+            	tableroSudoku[i][j].getDocument().addDocumentListener(new verificadorSudoku());
+            }
+        }
+
+    }
+
+    private void pintarTablero() {
+
 		tableroSudoku = new JTextField[GRID][GRID];
-		
+
 		numerosSudoku = new int[][] {
 			{5, 3, 4, 6, 7, 8, 9, 1, 2},
 			{6, 7, 2, 1, 9, 5, 3, 4, 8},
@@ -57,7 +70,7 @@ public class VentanaSudoku extends JDialog {
 			{2, 8, 7, 4, 1, 9, 6, 3, 5},
 			{3, 4, 5, 2, 8, 6, 1, 7, 9}
 		};
-		
+
 		for (int i = 0; i < GRID; i++) {
             for (int j = 0; j < GRID; j++) {
             	tableroSudoku[i][j] = new JTextField();
@@ -76,19 +89,19 @@ public class VentanaSudoku extends JDialog {
             		tField.setBorder(new CompoundBorder(
             				BorderFactory.createMatteBorder(0,0,1,0,Color.RED),
             				BorderFactory.createMatteBorder(1,1,1,1,Color.BLACK)));
-            	} 
+            	}
             	else if ((i==3 && j!=2 && j!=3 && j!=5 && j!=6) || (i==6 && j!=2 && j!=3 && j!=5 && j!=6))
             	{
             		tField.setBorder(new CompoundBorder(
             				BorderFactory.createMatteBorder(1,0,0,0,Color.RED),
             				BorderFactory.createMatteBorder(1,1,1,1,Color.BLACK)));
-            	} 
+            	}
             	else if ((j==2 && i!=2 && i!=3 && i!=5 && i!=6) || (j==5 && i!=2 && i!=3 && i!=5 && i!=6))
             	{
             		tField.setBorder(new CompoundBorder(
             				BorderFactory.createMatteBorder(0,0,0,1,Color.RED),
             				BorderFactory.createMatteBorder(1,1,1,1,Color.BLACK)));
-            	} 
+            	}
             	else if ((j==3 && i!=2 && i!=3 && i!=5 && i!=6) || (j==6 && i!=2 && i!=3 && i!=5 && i!=6))
             	{
             		tField.setBorder(new CompoundBorder(
@@ -130,22 +143,9 @@ public class VentanaSudoku extends JDialog {
             	sudokuPanel.add(tField);
             }
 		}
-		
-		for (int i = 0; i < GRID; i++) {
-            for (int j = 0; j < GRID; j++) {
-            	tableroSudoku[i][j].setText(String.valueOf(numerosSudoku[i][j]));
-            	tableroSudoku[i][j].getDocument().addDocumentListener(new verificadorSudoku());
-            }
-        }
-		
-		this.pack();
-        this.setLocationRelativeTo(null);
-		this.setVisible(true);
-		
-		eliminarNumeros(this.difSelecc);
-	}
+    }
 	
-	public void eliminarNumeros(Dificultad dificultad)
+	private void eliminarNumeros(Dificultad dificultad)
 	{
 		int numHuecos = -1;
 		random = new Random();
@@ -186,7 +186,7 @@ public class VentanaSudoku extends JDialog {
 		}
 	}
 	
-	public int[] regenerarVector(int[] vector)
+	private int[] regenerarVector(int[] vector)
 	{
 		for (int i = 0; i < vector.length; i++)
 		{
@@ -196,7 +196,7 @@ public class VentanaSudoku extends JDialog {
 		return vector;
 	}
 	
-	public boolean verificarSudoku()
+	private boolean verificarSudoku()
 	{
 		boolean resultadoVerSud = true;
 		int[] vector1_9 = {1, 2, 3, 4, 5, 6, 7, 8, 9};
